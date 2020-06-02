@@ -1,2 +1,4 @@
 ShareDB Server/node_modules
+ShareDB Server/.env
 CodeMirror/node_modules
+CodeMirror/.env

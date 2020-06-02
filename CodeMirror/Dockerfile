@@ -16,11 +16,16 @@ USER node
 # Install dependencies for the project
 RUN npm install
 
+ENV PORT=8080
+ENV DBPORT=8112
+ENV DBHOST=83.212.77.11
+
+
 # Copy application
 COPY --chown=node:node . .
 
 # Expose the port that serves the application
-EXPOSE 8080
+EXPOSE ${PORT}
 
 # Start the server
-CMD [ "npm", "start" ]
+CMD browserify client.js -t [ envify --DBPORT ${DBPORT}] -t [ envify --DBHOST ${DBHOST} ]  -o dist/bundle.js && node server.js

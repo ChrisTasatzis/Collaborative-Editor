@@ -5,8 +5,14 @@ var CodeMirror = require('codemirror');
 require('codemirror/mode/javascript/javascript');
 var ShareDBCodeMirror = require('./sharedb-codemirror');
 
-var ports = {sharedb: 8112, app: 8080};
+var port = 8112;
+var host = "83.212.77.11";
+
+console.log(port)
+
 var debug = false;
+
+
 
 var ws, connection, codeMirror, shareDBCodeMirror;
 
@@ -28,7 +34,7 @@ function openDoc(doc) {
 }
 
 window.onload = (event) => {
-	ws = new WebSocket(`ws://${window.location.hostname}:${ports.sharedb}`);
+	ws = new WebSocket(`ws://${host}:${port}`);
 	connection = new ShareDB.Connection(ws);
 	codeMirror = new CodeMirror(document.getElementById('textarea'));
 	shareDBCodeMirror = new ShareDBCodeMirror(codeMirror, {verbose: debug, key: 'content'});

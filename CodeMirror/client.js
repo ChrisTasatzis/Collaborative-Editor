@@ -4,8 +4,8 @@ var CodeMirror = require('codemirror');
 require('codemirror/mode/javascript/javascript');
 var ShareDBCodeMirror = require('./sharedb-codemirror');
 
-var port = process.env.DBPORT;
-var host = process.env.DBHOST;
+var port = process.env.npm_package_config_dbport || env.DBPORT;
+var host = process.env.npm_package_config_dbhost || process.env.DBHOST;
 
 console.log(port)
 

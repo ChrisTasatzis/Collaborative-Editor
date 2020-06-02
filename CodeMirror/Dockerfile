@@ -27,5 +27,9 @@ COPY --chown=node:node . .
 # Expose the port that serves the application
 EXPOSE ${PORT}
 
+CMD ["npm", "config set editor:port ${PORT}"]
+CMD ["npm", "config set editor:dbport ${DBPORT}"]
+CMD ["npm", "config set editor:dbuser ${DBHOST}"]
+
 # Start the server
 CMD browserify client.js -t [ envify --DBPORT ${DBPORT}] -t [ envify --DBHOST ${DBHOST} ]  -o dist/bundle.js && node server.js

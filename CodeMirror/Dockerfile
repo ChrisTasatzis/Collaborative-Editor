@@ -16,6 +16,9 @@ USER node
 # Install dependencies for the project
 RUN npm install
 
+# Install browserify globally
+RUN npm install browserify -g
+
 ENV PORT=8080
 ENV DBPORT=8112
 ENV DBHOST=83.212.77.11
@@ -26,10 +29,6 @@ COPY --chown=node:node . .
 
 # Expose the port that serves the application
 EXPOSE ${PORT}
-
-CMD ["npm", "config set editor:port ${PORT}"]
-CMD ["npm", "config set editor:dbport ${DBPORT}"]
-CMD ["npm", "config set editor:dbuser ${DBHOST}"]
 
 # Start the server
 CMD ["npm, "start"]

@@ -17,7 +17,7 @@ USER node
 RUN npm install
 
 # Install browserify globally
-RUN npm install browserify -g
+RUN sudo npm install browserify -g
 
 ENV PORT=8080
 ENV DBPORT=8112

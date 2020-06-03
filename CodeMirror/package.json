@@ -4,7 +4,7 @@
   "description": "",
   "main": "client.js",
   "scripts": {
-    "start": "browserify client.js -t [ envify --DBPORT $(DBPORT)] -t [ envify --DBHOST 83.212.77.11 ]  -o dist/bundle.js && node server.js"
+    "start": "browserify client.js -t [ envify --DBPORT $DBPORT ] -t [ envify --DBHOST $DBHOST ]  -o dist/bundle.js && node server.js"
   },
   "author": "",
   "license": "ISC",

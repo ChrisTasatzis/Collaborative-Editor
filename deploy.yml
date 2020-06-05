@@ -1,0 +1,66 @@
+version: "3.4"
+
+services:
+     
+  sharedb:
+    build: ./ShareDB_Server
+
+    environment:
+    # Environmental variables
+      - PORT=8080
+
+
+      # docker services inspect 
+      - NODENAME={{.Node.Hostname}}
+      - NODEID={{.Node.ID}}
+      - SERVICEID={{.Service.ID}}
+      - SERVICENAME={{.Service.Name}}
+      - TASKID={{.Task.ID}}
+      - TASKNAME={{.Task.Name}}
+      - TASKREPID={{.Task.Slot}}
+
+    constraints:
+      - node.role == worker
+
+    networks:
+      - editor_network  
+
+    deploy:
+      mode: replicated
+      replicas: 2
+      placement:
+        max_replicas_per_node: 1
+
+
+  editor:
+    build: ./CodeMirror
+      
+    environment:
+      # Environmental variables
+      - PORT=8080
+      - DBPORT=8112
+      - DBHOST=sharedb
+
+      # docker services inspect 
+      - NODENAME={{.Node.Hostname}}
+      - NODEID={{.Node.ID}}
+      - SERVICEID={{.Service.ID}}
+      - SERVICENAME={{.Service.Name}}
+      - TASKID={{.Task.ID}}
+      - TASKNAME={{.Task.Name}}
+      - TASKREPID={{.Task.Slot}}
+
+    constraints:
+      - node.role == worker
+
+    networks:
+      - editor_network  
+
+    deploy:
+      mode: replicated
+      replicas: 2
+        max_replicas_per_node: 1
+  
+  networks:
+    editor_network: 
+      driver: overlay

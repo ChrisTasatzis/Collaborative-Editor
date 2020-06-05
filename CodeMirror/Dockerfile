@@ -19,10 +19,10 @@ RUN npm install
 # Install browserify globally
 RUN sudo npm install browserify -g
 
-# Set the enviromental variables
-ENV PORT=8080
-ENV DBPORT=8112
-ENV DBHOST=83.212.77.11
+# # Set the enviromental variables
+# ENV PORT=8080
+# ENV DBPORT=8112
+# ENV DBHOST=83.212.77.11
 
 # Copy application
 COPY --chown=node:node . .

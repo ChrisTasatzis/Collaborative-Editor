@@ -60,8 +60,8 @@ services:
       placement:
         max_replicas_per_node: 1
         constraints:
-          - node.role == worker
-  
+      - node.role == worker
+
 networks:
   editor_network: 
     driver: overlay

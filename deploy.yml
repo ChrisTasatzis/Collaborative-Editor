@@ -19,9 +19,6 @@ services:
       - TASKNAME={{.Task.Name}}
       - TASKREPID={{.Task.Slot}}
 
-    constraints:
-      - node.role == worker
-
     networks:
       - editor_network  
 
@@ -30,6 +27,8 @@ services:
       replicas: 2
       placement:
         max_replicas_per_node: 1
+        constraints:
+          - node.role == worker
 
 
   editor:
@@ -50,8 +49,7 @@ services:
       - TASKNAME={{.Task.Name}}
       - TASKREPID={{.Task.Slot}}
 
-    constraints:
-      - node.role == worker
+    
 
     networks:
       - editor_network  
@@ -59,8 +57,11 @@ services:
     deploy:
       mode: replicated
       replicas: 2
+      placement:
         max_replicas_per_node: 1
+        constraints:
+          - node.role == worker
   
-  networks:
-    editor_network: 
-      driver: overlay
+networks:
+  editor_network: 
+    driver: overlay

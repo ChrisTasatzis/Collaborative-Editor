@@ -4,11 +4,9 @@ services:
      
   sharedb:
     image: christasatzis/sharedb:latest
-
     environment:
     # Environmental variables
       - PORT=8112
-      - CODEMIRROR=editor
 
       # docker services inspect 
       - NODENAME={{.Node.Hostname}}
@@ -21,7 +19,7 @@ services:
     command: npm start
 
     ports:
-      - "8112"
+      - "8112:8112"
 
     networks:
       - editor_network  
@@ -38,7 +36,6 @@ services:
 
   editor:
     image: christasatzis/codemirror:latest
-
     environment:
       # Environmental variables
       - PORT=8080
@@ -72,4 +69,3 @@ services:
 
 networks:
   editor_network: 
-    driver: overlay

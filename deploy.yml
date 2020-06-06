@@ -3,14 +3,11 @@ version: "3.4"
 services:
      
   sharedb:
-    image: share-db
-    build: 
-      context: ./ShareDB_Server/
-      dockerfile: Dockerfile
+    image: christasatzis/sharedb:latest
 
     environment:
     # Environmental variables
-      - PORT=8080
+      - PORT=8112
 
 
       # docker services inspect 
@@ -24,7 +21,7 @@ services:
     command: npm start
 
     ports:
-      - "8080"
+      - "8112"
 
     networks:
       - editor_network  
@@ -40,10 +37,8 @@ services:
 
 
   editor:
-    image: editor
-    build: 
-      context: ./CodeMirror/
-      dockerfile: Dockerfile  
+    image: christasatzis/codemirror:latest
+
     environment:
       # Environmental variables
       - PORT=8080
@@ -61,8 +56,8 @@ services:
     
     command: npm start
     ports: 
-      "8080:8080"
-      "8112"
+      - "8080:8080"
+      - "8112"
 
     networks:
       - editor_network  

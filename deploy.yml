@@ -3,7 +3,10 @@ version: "3.4"
 services:
      
   sharedb:
-    build: ./ShareDB_Server
+    image: share-db
+    build: 
+      context: ./ShareDB_Server/
+      dockerfile: Dockerfile
 
     environment:
     # Environmental variables
@@ -18,6 +21,10 @@ services:
       - TASKID={{.Task.ID}}
       - TASKNAME={{.Task.Name}}
       - TASKREPID={{.Task.Slot}}
+    command: npm start
+
+    ports:
+      - "8080"
 
     networks:
       - editor_network  
@@ -26,14 +33,17 @@ services:
       mode: replicated
       replicas: 2
       placement:
-        max_replicas_per_node: 1
+#        max_replicas_per_node: 1
         constraints:
           - node.role == worker
 
 
+
   editor:
-    build: ./CodeMirror
-      
+    image: editor
+    build: 
+      context: ./CodeMirror/
+      dockerfile: Dockerfile  
     environment:
       # Environmental variables
       - PORT=8080
@@ -48,8 +58,11 @@ services:
       - TASKID={{.Task.ID}}
       - TASKNAME={{.Task.Name}}
       - TASKREPID={{.Task.Slot}}
-
     
+    command: npm start
+    ports: 
+      "8080:8080"
+      "8112"
 
     networks:
       - editor_network  
@@ -58,9 +71,9 @@ services:
       mode: replicated
       replicas: 2
       placement:
-        max_replicas_per_node: 1
+#        max_replicas_per_node: 1
         constraints:
-      - node.role == worker
+          - node.role == worker
 
 networks:
   editor_network: 

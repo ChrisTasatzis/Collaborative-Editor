@@ -27,8 +27,8 @@ RUN sudo npm install browserify -g
 # Copy application
 COPY --chown=node:node . .
 
-# Expose the port that serves the application
-EXPOSE ${PORT}
+# # Expose the port that serves the application
+# EXPOSE ${PORT}
 
-# Start the server
-CMD ["npm, "start"]
+# # Start the server
+# CMD ["npm, "start"]

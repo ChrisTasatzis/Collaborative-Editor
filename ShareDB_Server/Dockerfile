@@ -19,11 +19,11 @@ RUN npm install
 # Copy application
 COPY --chown=node:node . .
 
-# # Crate the environmental variable for the port
-# ENV PORT=8080
+# # # Crate the environmental variable for the port
+# # ENV PORT=8080
 
-# Expose the port that serves the application
-EXPOSE ${PORT}
+# # Expose the port that serves the application
+# EXPOSE ${PORT}
 
-# Start the server
-CMD [ "npm", "start" ]
+# # Start the server
+# CMD [ "npm", "start" ]

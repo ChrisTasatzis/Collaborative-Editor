@@ -7,7 +7,7 @@ var ShareDBCodeMirror = require('./sharedb-codemirror');
 var port = process.env.DBPORT;
 var host = process.env.DBHOST;
 
-console.log(port)
+console.log(port, host)
 
 var debug = false;
 

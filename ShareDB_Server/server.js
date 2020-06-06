@@ -7,6 +7,8 @@ require('dotenv').config();
 
 var port = process.env.PORT;
 
+console.log(port, process.env.CODEMIRROR)
+
 var sharedb = new ShareDB();
 var connection = sharedb.connect();
 connection.get('docs', 'doc1').create({content: 'Type something ...'});

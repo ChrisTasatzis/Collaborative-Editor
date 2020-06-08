@@ -5,7 +5,8 @@ require('dotenv').config();
 
 var port = process.env.PORT || 8080;
 var host = process.env.IPFSHOST;
-var ipfsport = process.env.IPFSPORT;
+var ipfsport1 = process.env.IPFSPORT1;
+var ipfsport2 = process.env.IPFSPORT2;
 
 
 console.log(process.env.PORT)
@@ -19,14 +20,14 @@ app.use(express.static('.'));
 app.use(express.static('../node_modules'));
 app.post('/', async (req, res) => {
 	var uri
-	const ipfs = ipfsClient({ host: '83.212.77.11', port: '5002', protocol: 'http' })
+	const ipfs = ipfsClient({ host: host, port: ipfsport1, protocol: 'http' })
 
 	for await (const file of ipfs.add(urlSource('https://ipfs.io/images/ipfs-logo.svg'))) 
 	{
 		uri = file.cid.toString();
 	}
 	if(uri)
-		res.render('index', {uri: uri, host: host, port: ipfsport});
+		res.render('index', {uri: uri, host: host, port: ipfsport2});
 	else
 		res.render('index');
 }) 

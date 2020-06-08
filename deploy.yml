@@ -1,14 +1,14 @@
 version: "3.4"
 
 services:
-     
+
   sharedb:
     image: christasatzis/sharedb:latest
     environment:
     # Environmental variables
       - PORT=8112
 
-      # docker services inspect 
+      # docker services inspect
       - NODENAME={{.Node.Hostname}}
       - NODEID={{.Node.ID}}
       - SERVICEID={{.Service.ID}}
@@ -22,11 +22,11 @@ services:
       - "8112:8112"
 
     networks:
-      - editor_network  
+      - editor_network
 
     deploy:
       mode: replicated
-      replicas: 2
+      replicas: 1
       placement:
 #        max_replicas_per_node: 1
         constraints:
@@ -40,9 +40,9 @@ services:
       # Environmental variables
       - PORT=8080
       - DBPORT=8112
-      - DBHOST=sharedb
+      - DBHOST=83.212.77.11
 
-      # docker services inspect 
+      # docker services inspect
       - NODENAME={{.Node.Hostname}}
       - NODEID={{.Node.ID}}
       - SERVICEID={{.Service.ID}}
@@ -50,14 +50,13 @@ services:
       - TASKID={{.Task.ID}}
       - TASKNAME={{.Task.Name}}
       - TASKREPID={{.Task.Slot}}
-    
+
     command: npm start
-    ports: 
+    ports:
       - "8080:8080"
-      - "8112"
 
     networks:
-      - editor_network  
+      - editor_network
 
     deploy:
       mode: replicated
@@ -68,4 +67,4 @@ services:
           - node.role == worker
 
 networks:
-  editor_network: 
+  editor_network:

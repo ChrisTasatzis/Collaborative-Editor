@@ -1,8 +1,11 @@
 # Use an image that contains node and npm
-FROM node:10-alpine
+FROM node:12-alpine
 
 # Install browserify globally
 RUN npm install browserify -g
+
+# Install git 
+RUN apk --no-cache add git
 
 # Create the node_modules folder
 RUN mkdir -p /home/node/app/node_modules && chown -R node:node /home/node/app
@@ -26,8 +29,6 @@ COPY --chown=node:node . .
 # ENV PORT=8080
 # ENV DBPORT=8112
 # ENV DBHOST=83.212.77.11
-
-
 
 # # Expose the port that serves the application
 # EXPOSE ${PORT}

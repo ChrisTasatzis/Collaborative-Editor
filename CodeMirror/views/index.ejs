@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<script src="../dist/bundle.js"></script>
+	<link rel="stylesheet" type="text/css" href="../style.css">
+	<link rel="stylesheet" type="text/css" href="../node_modules/codemirror/lib/codemirror.css">
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css" integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous">
+	<title>ShareDB - CodeMirror</title>
+</head>
+<body>
+<%	if(typeof(uri) !== 'undefined') { %>
+		<script>
+			var uri = "<%= uri %>";
+			window.open("http://<%=host%>:<%=port%>/ipfs/" + uri , 'Download');
+		</script>	
+<% } %>
+	<div class="jumbotron">
+		<h1>Collaborative Editor</h1>
+		<div class=container>
+			<div id="textarea"></div>
+		</div>
+		<form class=container action="/" method="POST">
+			<div class="input-group col-6 py-5">
+				<input type="text" id="filename" class="form-control" placeholder="File Name" aria-label="Recipient's username" aria-describedby="basic-addon2">
+				<input type="hidden"> 
+				<div class="input-group-append">
+					<button class="btn btn-outline-secondary" id="downloadButton">Download</button>
+				</div>
+			</div>
+		</form>
+		  
+	</div>
+	</body>
+</html>

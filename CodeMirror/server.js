@@ -1,6 +1,6 @@
 var express = require('express');
-const ipfsClient = require('ipfs-http-client');
-const { urlSource } = ipfsClient
+var bodyParser = require('body-parser')
+const ipfsAPI = require('ipfs-api');
 require('dotenv').config();
 
 var port = process.env.PORT || 8080;
@@ -17,20 +17,32 @@ var app = express();
 app.set('view engine', 'ejs')
 app.set('views', __dirname + '/views')
 
+// parse application/x-www-form-urlencoded
+app.use(bodyParser.urlencoded({ extended: false }))
+
+
 app.use(express.static('.'));
 app.use(express.static('../node_modules'));
 app.post('/', async (req, res) => {
 	var uri
-	const ipfs = ipfsClient({ host: ipfshost, port: ipfsport1, protocol: 'http' })
+	const ipfs = ipfsAPI(ipfshost, ipfsport1, {protocol: 'http'})
 
-	for await (const file of ipfs.add(urlSource('https://ipfs.io/images/ipfs-logo.svg'))) 
+	var buffer = Buffer.from(req.body.data)
+	ipfs.files.add(buffer, function (err, file) 
 	{
-		uri = file.cid.toString();
-	}
-	if(uri)
-		res.render('index', {uri: uri, host: host, port: ipfsport2});
-	else
-		res.render('index');
+		if (err) 
+		{
+			console.log(err)
+			res.render('index');
+		}
+		console.log(file[0].hash)
+        res.render('index', {uri: file[0].hash, host: host, port: ipfsport2, filename: req.body.filename});
+	})
+
+	// if(uri)
+	// 	res.render('index', {uri: uri, host: host, port: ipfsport2});
+	// else
+	// 	res.render('index');
 }) 
 
 app.get('/', (req, res) => {

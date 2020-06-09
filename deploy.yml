@@ -70,7 +70,7 @@ services:
           - node.role == worker
 
   ipfs:
-    image: ipfs/js-ipfs:latest
+    image:  yeasy/ipfs
     environment:
      # docker services inspect
      - NODENAME={{.Node.Hostname}}

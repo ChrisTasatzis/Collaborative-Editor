@@ -4,6 +4,7 @@ var CodeMirror = require('codemirror');
 require('codemirror/mode/javascript/javascript');
 var ShareDBCodeMirror = require('./sharedb-codemirror');
 var domEventListener = require('dom-event-listener');
+var domready = require("domready");
 
 
 var port = process.env.DBPORT;
@@ -45,6 +46,16 @@ window.onload = (event) =>
 		data = codeMirror.getValue();
 	});
 
+	function logSubmit(event) {
+		data = document.getElementById('data');
+		data.value = codeMirror.getValue();
+	}
+	  
+	const form = document.getElementById('form');
+	
+	domEventListener.add(form, 'submit', logSubmit)
+	form.addEventListener('submit', logSubmit);
+	
 
 }
 

@@ -19,8 +19,10 @@ RUN npm install
 # Copy application
 COPY --chown=node:node . .
 
+# Used when outside of docker compose
+
 # # # Crate the environmental variable for the port
-# # ENV PORT=8080
+# # ENV PORT=??
 
 # # Expose the port that serves the application
 # EXPOSE ${PORT}

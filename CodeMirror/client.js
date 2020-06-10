@@ -1,37 +1,38 @@
-var WebSocket = require('reconnecting-websocket');
-var ShareDB = require('sharedb/lib/client');
-var CodeMirror = require('codemirror');
-require('codemirror/mode/javascript/javascript');
-var ShareDBCodeMirror = require('./sharedb-codemirror');
-var domEventListener = require('dom-event-listener');
-var domready = require("domready");
+// Module requirements 
+var WebSocket = require('reconnecting-websocket'); // Used for ShareDB connection
+var ShareDB = require('sharedb/lib/client'); // Used for ShareDB connection
+var CodeMirror = require('codemirror'); // CodeMirror
+var ShareDBCodeMirror = require('./sharedb-codemirror'); // Used to attach ShareDB Database to the editor
+var domEventListener = require('dom-event-listener'); // Used for form submission
 
-
+// Read the environment variables
 var port = process.env.DBPORT;
 var host = process.env.DBHOST;
 
-var download = window.download || {};
-
-var debug = false;
-
+// Initialize variables
 var ws, connection, codeMirror, shareDBCodeMirror;
 
-
-
+// Actions that happen when the page loads
 window.onload = (event) => 
 {
+	// Establish connection to the ShareDB database
 	ws = new WebSocket(`ws://${host}:${port}`);
 	connection = new ShareDB.Connection(ws);
-	codeMirror = new CodeMirror(document.getElementById('textarea'));
-	shareDBCodeMirror = new ShareDBCodeMirror(codeMirror, {verbose: debug, key: 'content'});
 
-	codeMirror.setOption('mode', 'javascript');
+	// Create CodeMirror from textarea
+	codeMirror = new CodeMirror(document.getElementById('textarea'));
+
+	// Set CodeMirror preferences
 	codeMirror.setOption('lineNumbers', true);
 	codeMirror.setSize(1600, 700);
-	//codeMirror.setOption('theme', 'darcula');
 	
+	// Create the object that ties CodeMirror with the ShareDB database
+	shareDBCodeMirror = new ShareDBCodeMirror(codeMirror, {verbose: false, key: 'content'});
+
+	// Get a connection from the ShareDB database
 	doc = connection.get('docs', 'doc1');
 	
+	// Attach CodeMirror to the connection
 	shareDBCodeMirror.attachDoc(doc, (error) => 
 	{
 		if (error) {
@@ -40,23 +41,21 @@ window.onload = (event) =>
 		}
 	});
 
-	var element = document.getElementById('downloadButton');
-	domEventListener.add(element, 'click',  function(event) 
+	// Actions to do before submiting the form 
+	function logSubmit(event) 
 	{
-		data = codeMirror.getValue();
-	});
-
-	function logSubmit(event) {
+		// Load a hiddent input with the data contained in the CodeMirror editor
 		data = document.getElementById('data');
 		data.value = codeMirror.getValue();
 	}
 	  
+
+	// Get the form element
 	const form = document.getElementById('form');
 	
-	domEventListener.add(form, 'submit', logSubmit)
-	form.addEventListener('submit', logSubmit);
+	// Make the form call logSubmit before submiting the form 
+	domEventListener.add(form, 'submit', logSubmit);
 	
-
 }
 
 

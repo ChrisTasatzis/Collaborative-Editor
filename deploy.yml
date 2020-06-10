@@ -2,11 +2,13 @@ version: "3.4"
 
 services:
 
+  # Service that creates a SharedDB database
   sharedb:
+    # Image pulled from Docker Hub
     image: christasatzis/sharedb:latest
     environment:
-    # Environmental variables
-      - PORT=8112
+      # Environmental variables
+      - PORT=8112 # Port that serves the database
 
       # docker services inspect
       - NODENAME={{.Node.Hostname}}
@@ -16,34 +18,55 @@ services:
       - TASKID={{.Task.ID}}
       - TASKNAME={{.Task.Name}}
       - TASKREPID={{.Task.Slot}}
-    command: npm start
 
+    # Ports that need to open for the service
     ports:
-      - "8112:8112"
+      - "8112:8112" # 8112 has to be external so that it can be accessed 
+                    #from the browser to attach Codemirror to the ShareDB database
 
+    # The network that ties all the services 
     networks:
       - editor_network
 
+    # Start the service
+    command: npm start
+
+    # Deploy settings 
     deploy:
+      # Restart the service on failure
+      restart_policy:
+        condition: on-failure
+
+      # 1 Replica because otherwise there would be 2 different instances of the collaborative editor 
       mode: replicated
       replicas: 1
       placement:
-#        max_replicas_per_node: 1
         constraints:
-          - node.role == worker
+          - node.role == worker # Don't run on the manager of the swarm
+
+      # Resources for the service 
+      resources: 
+        reservations: # Allocated on start
+          cpus: '1'
+          memory: 4G
+        limits: # Throw out of memory exception if surpassed
+          cpus: '4'
+          memory: 10G
+     
 
 
-
+  # Service that creates a web app that serves a static page containing the collaborative editor
   editor:
+    # Image pulled from Docker Hub
     image: christasatzis/codemirror:latest
     environment:
       # Environmental variables
-      - PORT=8080
-      - DBPORT=8112
-      - DBHOST=83.212.77.11
-      - IPFSHOST=ipfs
-      - IPFSPORT1=5002
-      - IPFSPORT2=9090
+      - PORT=8080 # Web app port
+      - DBPORT=8112 # ShareDB port
+      - DBHOST=83.212.77.11 # IP address of ShareDB server 
+      - IPFSHOST=83.212.77.11 # IP address of IPFS server 
+      - IPFSPORT1=5002 # Port used to add files to the server 
+      - IPFSPORT2=9090 # Port used to retrieve the files
 
       # docker services inspect
       - NODENAME={{.Node.Hostname}}
@@ -54,21 +77,39 @@ services:
       - TASKNAME={{.Task.Name}}
       - TASKREPID={{.Task.Slot}}
 
+    # Start the service 
     command: npm start
+
+    # Ports that need to open for the microservice
     ports:
       - "8080:8080"
 
+    # The network that ties all the services 
     networks:
       - editor_network
 
+    # Deploy settings 
     deploy:
+      # Restart the service on failure
+      restart_policy:
+        condition: on-failure
+
       mode: replicated
       replicas: 2
       placement:
-#        max_replicas_per_node: 1
-        constraints:
-          - node.role == worker
+        constraints: 
+          - node.role == worker # Don't run on the manager of the swarm
 
+      # Resources for the service 
+      resources: 
+        reservations: # Allocated on start
+          cpus: '2'
+          memory: 500M
+        limits: # Throw out of memory exception if surpassed
+          cpus: '4'
+          memory: 2G
+
+  # Creates an ipfs server that serves the results 
   ipfs:
     image:  yeasy/ipfs
     environment:
@@ -80,20 +121,38 @@ services:
      - TASKID={{.Task.ID}}
      - TASKNAME={{.Task.Name}}
      - TASKREPID={{.Task.Slot}}
-    ports:
-      - "5002"
-      - "9090:9090"
 
+    # Ports that need to open for the service
+    ports:
+      - "5002:5002" # Port used to add data to the server
+      - "9090:8080" # Port used to serve the data through the hash 
+
+    # The network that ties all the services 
     networks:
       - editor_network
 
+    # Deploy settings 
     deploy:
+      # Restart the service on failure
+      restart_policy:
+        condition: on-failure
+
+      # 2 Replicas 
       mode: replicated
       replicas: 2
       placement:
-#        max_replicas_per_node: 1
         constraints:
-          - node.role == worker
+          - node.role == worker # Don't run on the manager of the swarm 
 
+      # Resources for the service 
+      resources: 
+        reservations: # Allocated on start
+          cpus: '2'
+          memory: 500M
+        limits: # Throw out of memory exception if surpassed
+          cpus: '4'
+          memory: 2G
+
+# The network that ties all the services 
 networks:
   editor_network:

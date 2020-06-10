@@ -25,10 +25,12 @@ RUN npm install
 # Copy application
 COPY --chown=node:node . .
 
+# Used when outside of docker compose
+
 # # Set the enviromental variables
-# ENV PORT=8080
-# ENV DBPORT=8112
-# ENV DBHOST=83.212.77.11
+# ENV PORT=??
+# ENV DBPORT=??
+# ENV DBHOST=??
 
 # # Expose the port that serves the application
 # EXPOSE ${PORT}
